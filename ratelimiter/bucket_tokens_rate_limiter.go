@@ -1,11 +1,11 @@
 package ratelimiter
 
 import (
-	"context"
 	"sync/atomic"
 	"time"
 )
 
+// BucketTokenRateLimiter is a bucket tokens based limiter implementation
 type BucketTokenRateLimiter struct {
 	capacity       uint32
 	tokens         uint32
@@ -14,7 +14,7 @@ type BucketTokenRateLimiter struct {
 	rate           float32
 }
 
-func NewBucketTokenRateLimiter(ctx context.Context, capacity uint32, interval time.Duration) *BucketTokenRateLimiter {
+func NewBucketTokenRateLimiter(capacity uint32, interval time.Duration) *BucketTokenRateLimiter {
 	return &BucketTokenRateLimiter{
 		capacity:       capacity,
 		tokens:         capacity,

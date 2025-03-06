@@ -1,7 +1,6 @@
 package ratelimiter
 
 import (
-	"context"
 	"sync"
 	"testing"
 	"time"
@@ -12,7 +11,7 @@ import (
 func TestTokenBucketLimiter(t *testing.T) {
 	t.Parallel()
 
-	rateLimiter := NewBucketTokenRateLimiter(context.Background(), 3, time.Second)
+	rateLimiter := NewBucketTokenRateLimiter(3, time.Second)
 
 	assert.True(t, rateLimiter.Allow())
 	assert.True(t, rateLimiter.Allow())
@@ -29,7 +28,7 @@ func TestTokenBucketLimiterWithGoroutines(t *testing.T) {
 	t.Parallel()
 
 	goroutinesNumber := 10
-	rateLimiter := NewBucketTokenRateLimiter(context.Background(), uint32(goroutinesNumber), time.Second)
+	rateLimiter := NewBucketTokenRateLimiter(uint32(goroutinesNumber), time.Second)
 
 	wg := sync.WaitGroup{}
 	wg.Add(goroutinesNumber)
@@ -47,15 +46,12 @@ func TestTokenBucketLimiterWithGoroutines(t *testing.T) {
 func TestTokenBucketLimiterWithCancel(t *testing.T) {
 	t.Parallel()
 
-	ctx, cancel := context.WithCancel(context.Background())
-	rateLimiter := NewBucketTokenRateLimiter(ctx, 3, 500*time.Millisecond)
+	rateLimiter := NewBucketTokenRateLimiter(3, 500*time.Millisecond)
 
 	assert.True(t, rateLimiter.Allow())
 	assert.True(t, rateLimiter.Allow())
 	assert.True(t, rateLimiter.Allow())
 	assert.False(t, rateLimiter.Allow())
-
-	cancel()
 
 	time.Sleep(550 * time.Millisecond)
 	assert.True(t, rateLimiter.Allow())
