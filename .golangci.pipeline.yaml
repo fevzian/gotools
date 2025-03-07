@@ -34,10 +34,11 @@ linters:
   enable:
     - errcheck
     - goconst
-    - goimports
+    #- goimports
     - gosec
     - govet
     - ineffassign
+    - revive
     - typecheck
     - unused
 
